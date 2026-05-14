@@ -103,7 +103,11 @@ module Payload::Windows::MeterpreterLoader_x64
       arch: ARCH_X64,
       name: 'reflective_loader'
     )
-    Metasm::Shellcode.assemble(Metasm::X64.new, reflective_loader_asm).encode_string
+    
+    code = Metasm::Shellcode.assemble(Metasm::X64.new, reflective_loader_asm).encode_string
+    hash = Rex::Text.md5_raw(code).unpack("H*").first
+    vprint_status("Reflective Loader GraphML fingerprint: #{hash}")
+    code
   end
 
   def stage_meterpreter(opts={})
